@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -39,72 +40,76 @@
 					<a class="navbar-brand" style="line-height:32px;" href="#">SAMOSA LABS - ADVANCED  ANALYTICS</a>
 				</div>
 				<!-- Collect../ the nav links, forms, and other content for toggling -->
-			<!-- /.container -->
+				<!-- /.container -->
 		</nav>
 
 		<div style="margin-top:90px;">
-		<div class="row">
-			<div class="col-lg-6 text-center">
-						<p>Number of installations at each hour - page will be updated everyday </p>
-			<div class="chart">
-			</div>
-			<div> <!-- col closed-->
+			<div class="row">
+				<div class="col-lg-6 text-center">
+					<p>Number of installations at each hour - page will be updated everyday - Till 14th March
+					<p id="count"><b></b></p></p>
+					<div class="chart">
+					</div>
+					<div> <!-- col closed-->
 
 
-			<div class="col-lg-6 text-center">
-				<div> <!-- Second col closed-->
-			<div>
-		</div>
-	
-		<script>
-					// Main Code
-					
+						<div class="col-lg-6 text-center">
+							<div> <!-- Second col closed-->
+								<div>
+								</div>
 
-				d3.json("./hours.json", function(data){
-						var datajson = data;
-						console.log("mani");
-						var dataArray=[];
-						for(i=0;i<24;i++){
-							dataArray[i] = datajson[i+1];
-							console.log("i = "+i + ", value = "+dataArray[i]);
-						}
+								<script>
+// Main Code
 
-						var width = "1000";
-						var height = "100";
 
-						var canvas = d3.select("body")
-								.append("svg")
-								.attr("width", width)
-								.attr("height", height)
-								.attr("transform", "translate(2,0)");
-								
-								var x = d3.scale.linear()
-										    .domain([0, d3.max(dataArray)])
-										    .range([0, 1000]);
+d3.json("./hours.json", function(data){
+	var datajson = data;
+	console.log("mani");
+	var dataArray=[];
+	var total_count=0;
+	for(i=0;i<24;i++){
+		dataArray[i] = datajson[i+1];
+		total_count += datajson[i+1];
+		console.log("i = "+i + ", value = "+dataArray[i]);
+	}
+	document.getElementById("count").innerHTML="<b>"+total_count+"</b>";
+	var width = "1000";
+	var height = "100";
 
-								var axisScale = d3.scale.linear()
-											.domain([0,d3.max(dataArray)])
-											.range([0, width]);
+	var canvas = d3.select("body")
+		.append("svg")
+		.attr("width", width)
+		.attr("height", height)
+		.attr("transform", "translate(2,0)");
 
-								var xAxis = d3.svg.axis().scale(axisScale);
+	var x = d3.scale.linear()
+		.domain([0, d3.max(dataArray)])
+		.range([0, 1000]);
 
-									canvas.append("g")
-										.attr("transform", "translate(2,30)")
-										.call(xAxis);
+	var axisScale = d3.scale.linear()
+		.domain([0,d3.max(dataArray)])
+		.range([0, width]);
 
-								var chart = d3.select(".chart")
-									  .selectAll("div")
-									    .data(dataArray)
-									  .enter().append("div")
-									    .style("width", function(d,i) { return 1 + "px"; })
-									    .text(function(d,i) { return i+1 + " hrs   " + " ---  "+ d; });
+	var xAxis = d3.svg.axis().scale(axisScale);
 
-								chart.transition()
-									.delay(200)
-									.duration(2500)
-									 .style("width", function(d,i) { return x(d) + "px"; })
-			
-					});
-			</script>
-		</body>
-	</html>
+	canvas.append("g")
+		.attr("transform", "translate(2,30)")
+		.call(xAxis);
+
+	var chart = d3.select(".chart")
+		.selectAll("div")
+		.data(dataArray)
+		.enter().append("div")
+		.style("width", function(d,i) { return 1 + "px"; })
+		.text(function(d,i) { return i+1 + " hrs   " + " ---  "+ d; });
+
+	chart.transition()
+		.delay(200)
+		.duration(2500)
+		.style("width", function(d,i) { return x(d) + "px"; })
+
+});
+								</script>
+	</body>
+</html>
+
